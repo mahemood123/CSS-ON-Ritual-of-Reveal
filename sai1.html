@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoteVerse - Your B.Tech Study Companion</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --accent: #4F46E5;
+      --dark: #1a1a2e;
+      --light: #ffffff;
+      --gray: #f8fafc;
+      --text: #2d3748;
+      --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      --glow: 0 0 20px rgba(79, 70, 229, 0.3);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Glassmorphism Effect */
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+    }
+
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      padding: 1rem 0;
+    }
+
+    header.scrolled {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 800;
+      background: var(--primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-link:hover {
+      transform: translateY(-2px);
+      color: var(--accent);
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      width: 25px;
+      height: 3px;
+      background: var(--text);
+      margin: 3px 0;
+      transition: 0.3s;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 2rem;
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      z-index: 10;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2rem;
+      animation: fadeInUp 1s ease 0.3s both;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeInUp 1s ease 0.6s both;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    /* Stats Section */
+    .stats {
+      padding: 4rem 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .stats-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .stat-item {
+      color: white;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    /* Branches Section */
+    .branches {
+      padding: 6rem 2rem;
+      background: var(--light);
+      position: relative;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 3rem;
+      background: var(--primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .branches-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .branch-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .branch-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--primary);
+    }
+
+    .branch-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    }
+
+    .branch-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--primary);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .branch-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .branch-description {
+      color: #64748b;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .branch-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .notes-count {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .download-count {
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 6rem 2rem;
+      background: var(--gray);
+    }
+
+    .features-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      text-align: center;
+      padding: 2rem;
+      background: white;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--secondary);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+      margin: 0 auto 1rem;
+    }
+
+    /* Search Section */
+    .search-section {
+      padding: 4rem 2rem;
+      background: var(--dark);
+      color: white;
+      text-align: center;
+    }
+
+    .search-container {
+      max-width: 600px;
+      margin: 2rem auto 0;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 1.5rem 2rem;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .search-input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .search-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--accent);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .search-btn:hover {
+      background: #3730a3;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      backdrop-filter: blur(10px);
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 3rem;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+      animation: slideUp 0.3s ease;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #64748b;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      color: var(--accent);
+      transform: scale(1.2);
+    }
+
+    .modal-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: var(--glow);
+    }
+
+    .form-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .form-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 3rem 2rem 1rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-section h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .social-link {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 2rem;
+      color: #94a3b8;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+      }
+
+      .nav-menu.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: flex;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .branches-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        margin: 1rem;
+        padding: 2rem;
+      }
+    }
+
+    /* Loading Animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      background: var(--accent);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      transform: translateX(100%);
+      transition: all 0.3s ease;
+      z-index: 10001;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    .notification.success {
+      background: #059669;
+    }
+
+    .notification.error {
+      background: #dc2626;
+    }
+
+    /* Floating Action Button */
+    .fab {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      background: var(--accent);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .fab:hover {
+      transform: scale(1.1);
+      box-shadow: var(--glow);
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-animation"></div>
+
+  <!-- Header -->
+  <header id="header">
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fas fa-graduation-cap"></i> NoteVerse
+      </div>
+      <nav>
+        <ul class="nav-menu" id="nav-menu">
+          <li><a href="#home" class="nav-link">Home</a></li>
+          <li><a href="#branches" class="nav-link">Branches</a></li>
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+          <li><a href="#" class="nav-link" onclick="openModal('loginModal')">Login</a></li>
+        </ul>
+        <div class="menu-toggle" id="menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h1>NoteVerse</h1>
+      <p class="hero-subtitle">Your Ultimate B.Tech Study Companion - Access Premium Notes, Resources & More</p>
+      <div class="cta-buttons">
+        <a href="#branches" class="btn btn-primary">
+          <i class="fas fa-book-open"></i> Explore Notes
+        </a>
+        <a href="#" class="btn btn-secondary" onclick="openModal('signupModal')">
+          <i class="fas fa-user-plus"></i> Join Free
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="stats-container">
+      <div class="stat-item">
+        <span class="stat-number" data-target="50000">0</span>
+        <span class="stat-label">Active Students</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" data-target="1200">0</span>
+        <span class="stat-label">Study Materials</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" data-target="15">0</span>
+        <span class="stat-label">Engineering Branches</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" data-target="95">0</span>
+        <span class="stat-label">Success Rate %</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Branches Section -->
+  <section id="branches" class="branches">
+    <h2 class="section-title">Engineering Branches</h2>
+    <div class="branches-grid">
+      <div class="branch-card" onclick="showNotification('CSE materials coming soon!', 'success')">
+        <div class="branch-icon">
+          <i class="fas fa-code"></i>
+        </div>
+        <h3 class="branch-title">Computer Science & Engineering</h3>
+        <p class="branch-description">Master programming, algorithms, data structures, AI, ML, and cutting-edge technologies.</p>
+        <div class="branch-stats">
+          <span class="notes-count"><i class="fas fa-file-alt"></i> 250+ Notes</span>
+          <span class="download-count"><i class="fas fa-download"></i> 15.2k downloads</span>
+        </div>
+      </div>
+
+      <div class="branch-card" onclick="showNotification('ECE materials coming soon!', 'success')">
+        <div class="branch-icon">
+          <i class="fas fa-microchip"></i>
+        </div>
+        <h3 class="branch-title">Electronics & Communication</h3>
+        <p class="branch-description">Explore electronics, communication systems, embedded systems, and signal processing.</p>
+        <div class="branch-stats">
+          <span class="notes-count"><i class="fas fa-file-alt"></i> 180+ Notes</span>
+          <span class="download-count"><i class="fas fa-download"></i> 12.8k downloads</span>
+        </div>
+      </div>
+
+      <div class="branch-card" onclick="showNotification('Mechanical materials coming soon!', 'success')">
+        <div class="branch-icon">
+          <i class="fas fa-cogs"></i>
+        </div>
+        <h3 class="branch-title">Mechanical Engineering</h3>
+        <p class="branch-description">Learn thermodynamics, manufacturing, design, mechanics, and automotive engineering.</p>
+        <div class="branch-stats">
+          <span class="notes-count"><i class="fas fa-file-alt"></i> 220+ Notes</span>
+          <span class="download-count"><i class="fas fa-download"></i> 14.5k downloads</span>
+        </div>
+      </div>
+
+      <div class="branch-card" onclick="showNotification('Civil materials coming soon!', 'success')">
+        <div class="branch-icon">
+          <i class="fas fa-building"></i>
+        </div>
+        <h3 class="branch-title">Civil Engineering</h3>
+        <p class="branch-description">Master construction, structural analysis, environmental engineering, and urban planning.</p>
+        <div class="branch-stats">
+          <span class="notes-count"><i class="fas fa-file-alt"></i> 200+ Notes</span>
+          <span class="download-count"><i class="fas fa-download"></i> 11.2k downloads</span>
+        </div>
+      </div>
+
+      <div class="branch-card" onclick="showNotification('EEE materials coming soon!', 'success')">
+        <div class="branch-icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <h3 class="branch-title">Electrical Engineering</h3>
+        <p class="branch-description">Study power systems, control systems, renewable energy, and electrical machines.</p>
+        <div class="branch-stats">
+          <span class="notes-count"><i class="fas fa-file-alt"></i> 190+ Notes</span>
+          <span class="download-count"><i class="fas fa-download"></i> 13.1k downloads</span>
+        </div>
+      </div>
+
+      <div class="branch-card" onclick="showNotification('IT materials coming soon!', 'success')">
+        <div class="branch-icon">
+          <i class="fas fa-laptop-code"></i>
+        </div>
+        <h3 class="branch-title">Information Technology</h3>
+        <p class="branch-description">Explore software development, databases, networking, cybersecurity, and cloud computing.</p>
+        <div class="branch-stats">
+          <span class="notes-count"><i class="fas fa-file-alt"></i> 230+ Notes</span>
+          <span class="download-count"><i class="fas fa-download"></i> 16.8k downloads</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <h2 class="section-title">Why Choose NoteVerse?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-download"></i>
+        </div>
+        <h3>Free Downloads</h3>
+        <p>Access all study materials completely free. No hidden charges, no premium subscriptions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-star"></i>
+        </div>
+        <h3>Premium Quality</h3>
+        <p>Curated by top performers and verified by subject experts. Quality guaranteed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h3>24/7 Access</h3>
+        <p>Study anytime, anywhere. Our platform is available round the clock.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <h3>Community Support</h3>
+        <p>Join thousands of students. Share doubts, get answers, collaborate and grow.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <h3>Mobile Friendly</h3>
+        <p>Optimized for all devices. Study on your phone, tablet, or desktop seamlessly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-sync"></i>
+        </div>
+        <h3>Regular Updates</h3>
+        <p>Fresh content added regularly. Stay updated with latest syllabus and patterns.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search Section -->
+  <section class="search-section">
+    <h2 class="section-title" style="color: white;">Find Your Perfect Study Material</h2>
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search for notes, subjects, or topics...">
+      <button class="search-btn" onclick="performSearch()">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('loginModal')">
+        <i class="fas fa-times"></i>
+      </button>
+      <h2 class="modal-title">Welcome Back!</h2>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <input type="email" class="form-input" placeholder="Email Address" required>
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-input" placeholder="Password" required>
+        </div>
+        <button type="submit" class="form-btn">
+          <span class="btn-text">Sign In</span>
+          <span class="loading" style="display: none;"></span>
+        </button>
+      </form>
+      <p style="text-align: center; margin-top: 1rem; color: #64748b;">
+        Don't have an account? <a href="#" onclick="switchModal('loginModal', 'signupModal')" style="color: var(--accent);">Sign up here</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div id="signupModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('signupModal')">
+        <i class="fas fa-times"></i>
+      </button>
+      <h2 class="modal-title">Join NoteVerse!</h2>
+      <form onsubmit="handleSignup(event)">
+        <div class="form-group">
+          <input type="text" class="form-input" placeholder="Full Name" required>
+        </div>
+        <div class="form-group">
+          <input type="email" class="form-input" placeholder="Email Address" required>
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-input" placeholder="Password" required>
+        </div>
+        <div class="form-group">
+          <select class="form-input" required>
+            <option value="">Select Your Branch</option>
+            <option value="cse">Computer Science & Engineering</option>
+            <option value="ece">Electronics & Communication</option>
+            <option value="mechanical">Mechanical Engineering</option>
+            <option value="civil">Civil Engineering</option>
+            <option value="eee">Electrical Engineering</option>
+            <option value="it">Information Technology</option>
+          </select>
+        </div>
+        <button type="submit" class="form-btn">
+          <span class="btn-text">Create Account</span>
+          <span class="loading" style="display: none;"></span>
+        </button>
+      </form>
+      <p style="text-align: center; margin-top: 1rem; color: #64748b;">
+        Already have an account? <a href="#" onclick="switchModal('signupModal', 'loginModal')" style="color: var(--accent);">Sign in here</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Branch Detail Modal -->
+  <div id="branchModal" class="modal">
+    <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+      <button class="modal-close" onclick="closeModal('branchModal')">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="branchModalContent">
+        <!-- Dynamic content will be loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3><i class="fas fa-graduation-cap"></i> NoteVerse</h3>
+        <p>Empowering B.Tech students with quality study materials and resources. Join thousands of successful engineering students.</p>
+        <div class="social-links">
+          <a href="https://facebook.com/noteverse" class="social-link" target="_blank" rel="noopener">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://twitter.com/noteverse" class="social-link" target="_blank" rel="noopener">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="https://instagram.com/noteverse" class="social-link" target="_blank" rel="noopener">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://linkedin.com/company/noteverse" class="social-link" target="_blank" rel="noopener">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="https://youtube.com/noteverse" class="social-link" target="_blank" rel="noopener">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul class="footer-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#branches">All Branches</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/blog">Study Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Resources</h3>
+        <ul class="footer-links">
+          <li><a href="/notes/cse">CSE Notes</a></li>
+          <li><a href="/notes/ece">ECE Notes</a></li>
+          <li><a href="/notes/mechanical">Mechanical Notes</a></li>
+          <li><a href="/notes/civil">Civil Notes</a></li>
+          <li><a href="/question-papers">Question Papers</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Support</h3>
+        <ul class="footer-links">
+          <li><a href="/help">Help Center</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="mailto:support@noteverse.com">support@noteverse.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 NoteVerse. All rights reserved. | Made with <i class="fas fa-heart" style="color: #e53e3e;"></i> for B.Tech Students</p>
+    </div>
+  </footer>
+
+  <!-- Floating Action Button -->
+  <button class="fab" onclick="scrollToTop()" title="Back to Top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Notification Container -->
+  <div id="notification" class="notification"></div>
+
+  <script>
+    // URL Management and Routing
+    class Router {
+      constructor() {
+        this.routes = {
+          '/': () => this.showHome(),
+          '/home': () => this.showHome(),
+          '/branches': () => this.showBranches(),
+          '/features': () => this.showFeatures(),
+          '/contact': () => this.showContact(),
+          '/about': () => this.showAbout(),
+          '/blog': () => this.showBlog(),
+          '/help': () => this.showHelp(),
+          '/privacy': () => this.showPrivacy(),
+          '/terms': () => this.showTerms(),
+          '/notes/cse': () => this.showBranchNotes('cse'),
+          '/notes/ece': () => this.showBranchNotes('ece'),
+          '/notes/mechanical': () => this.showBranchNotes('mechanical'),
+          '/notes/civil': () => this.showBranchNotes('civil'),
+          '/notes/it': () => this.showBranchNotes('it'),
+          '/notes/eee': () => this.showBranchNotes('eee'),
+          '/question-papers': () => this.showQuestionPapers()
+        };
+        this.init();
+      }
+
+      init() {
+        window.addEventListener('popstate', () => this.handleRoute());
+        document.addEventListener('DOMContentLoaded', () => this.handleRoute());
+        this.handleRoute();
+      }
+
+      handleRoute() {
+        const path = window.location.pathname;
+        const route = this.routes[path] || this.routes['/'];
+        route();
+      }
+
+      navigateTo(path) {
+        window.history.pushState({}, '', path);
+        this.handleRoute();
+      }
+
+      showHome() {
+        document.querySelector('#home').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      showBranches() {
+        document.querySelector('#branches').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      showFeatures() {
+        document.querySelector('#features').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      showContact() {
+        document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      showBranchNotes(branch) {
+        const branchData = {
+          cse: {
+            title: 'Computer Science & Engineering',
+            icon: 'fas fa-code',
+            subjects: ['Data Structures', 'Algorithms', 'Operating Systems', 'Database Systems', 'Computer Networks', 'Software Engineering', 'Machine Learning', 'Artificial Intelligence'],
+            description: 'Complete CSE study materials including notes, assignments, and project resources.',
+            downloadUrl: '/downloads/cse-notes.zip'
+          },
+          ece: {
+            title: 'Electronics & Communication Engineering',
+            icon: 'fas fa-microchip',
+            subjects: ['Analog Circuits', 'Digital Electronics', 'Communication Systems', 'Signal Processing', 'Electromagnetic Theory', 'Microprocessors', 'VLSI Design', 'Control Systems'],
+            description: 'Comprehensive ECE materials covering all core subjects.',
+            downloadUrl: '/downloads/ece-notes.zip'
+          },
+          mechanical: {
+            title: 'Mechanical Engineering',
+            icon: 'fas fa-cogs',
+            subjects: ['Thermodynamics', 'Fluid Mechanics', 'Machine Design', 'Manufacturing Technology', 'Heat Transfer', 'Dynamics', 'Materials Science', 'Automotive Engineering'],
+            description: 'Complete mechanical engineering study resources.',
+            downloadUrl: '/downloads/mechanical-notes.zip'
+          },
+          civil: {
+            title: 'Civil Engineering',
+            icon: 'fas fa-building',
+            subjects: ['Structural Analysis', 'Concrete Technology', 'Geotechnical Engineering', 'Transportation Engineering', 'Water Resources', 'Environmental Engineering', 'Construction Management', 'Surveying'],
+            description: 'Comprehensive civil engineering materials and resources.',
+            downloadUrl: '/downloads/civil-notes.zip'
+          },
+          it: {
+            title: 'Information Technology',
+            icon: 'fas fa-laptop-code',
+            subjects: ['Programming', 'Web Development', 'Database Management', 'System Analysis', 'Network Security', 'Cloud Computing', 'Mobile App Development', 'Data Analytics'],
+            description: 'Complete IT study materials and practical resources.',
+            downloadUrl: '/downloads/it-notes.zip'
+          },
+          eee: {
+            title: 'Electrical & Electronics Engineering',
+            icon: 'fas fa-bolt',
+            subjects: ['Power Systems', 'Control Systems', 'Power Electronics', 'Electrical Machines', 'Digital Signal Processing', 'Renewable Energy', 'Electric Drives', 'Protection Systems'],
+            description: 'Comprehensive EEE study materials and resources.',
+            downloadUrl: '/downloads/eee-notes.zip'
+          }
+        };
+
+        const data = branchData[branch];
+        if (data) {
+          this.showBranchDetails(data);
+        }
+      }
+
+      showBranchDetails(data) {
+        const modalContent = document.getElementById('branchModalContent');
+        modalContent.innerHTML = `
+          <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="width: 100px; height: 100px; background: var(--primary); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: white; margin: 0 auto 1rem;">
+              <i class="${data.icon}"></i>
+            </div>
+            <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--text);">${data.title}</h2>
+            <p style="color: #64748b; font-size: 1.1rem;">${data.description}</p>
+          </div>
+          <div style="margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 1rem; color: var(--text);">Available Subjects:</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+              ${data.subjects.map(subject => `
+                <div style="background: var(--gray); padding: 1rem; border-radius: 10px; text-align: center;">
+                  <i class="fas fa-book" style="color: var(--accent); margin-bottom: 0.5rem;"></i>
+                  <p style="font-weight: 600;">${subject}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <div style="text-align: center;">
+            <button class="btn btn-primary" onclick="downloadNotes('${data.downloadUrl}')" style="margin-right: 1rem;">
+              <i class="fas fa-download"></i> Download All Notes
+            </button>
+            <button class="btn btn-secondary" onclick="showNotification('Individual subject downloads coming soon!', 'info')">
+              <i class="fas fa-list"></i> Browse by Subject
+            </button>
+          </div>
+        `;
+        openModal('branchModal');
+      }
+
+      showAbout() {
+        showNotification('About page - Redirecting to noteverse.com/about', 'info');
+      }
+
+      showBlog() {
+        showNotification('Study blog - Redirecting to noteverse.com/blog', 'info');
+      }
+
+      showHelp() {
+        showNotification('Help center - Redirecting to noteverse.com/help', 'info');
+      }
+
+      showPrivacy() {
+        showNotification('Privacy policy - Redirecting to noteverse.com/privacy', 'info');
+      }
+
+      showTerms() {
+        showNotification('Terms of service - Redirecting to noteverse.com/terms', 'info');
+      }
+
+      showQuestionPapers() {
+        showNotification('Question papers section - Redirecting to noteverse.com/question-papers', 'info');
+      }
+    }
+
+    // Initialize router
+    const router = new Router();
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('header');
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
+
+    // Stats animation
+    const animateStats = () => {
+      const stats = document.querySelectorAll('.stat-number');
+      stats.forEach(stat => {
+        const target = parseInt(stat.getAttribute('data-target'));
+        const increment = target / 100;
+        let current = 0;
+        
+        const updateStat = () => {
+          current += increment;
+          if (current < target) {
+            stat.textContent = Math.floor(current).toLocaleString();
+            requestAnimationFrame(updateStat);
+          } else {
+            stat.textContent = target.toLocaleString();
+          }
+        };
+        updateStat();
+      });
+    };
+
+    // Intersection Observer for animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (entry.target.classList.contains('stats')) {
+            animateStats();
+          }
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe sections for animation
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('section, .branch-card, .feature-card');
+      sections.forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = 'all 0.6s ease';
+        observer.observe(section);
+      });
+    });
+
+    // Modal functions
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    function switchModal(closeId, openId) {
+      closeModal(closeId);
+      setTimeout(() => openModal(openId), 300);
+    }
+
+    // Form handlers
+    function handleLogin(event) {
+      event.preventDefault();
+      const btn = event.target.querySelector('.form-btn');
+      const btnText = btn.querySelector('.btn-text');
+      const loading = btn.querySelector('.loading');
+      
+      btnText.style.display = 'none';
+      loading.style.display = 'inline-block';
+      
+      // Simulate login process
+      setTimeout(() => {
+        btnText.style.display = 'inline';
+        loading.style.display = 'none';
+        closeModal('loginModal');
+        showNotification('Welcome back! Login successful.', 'success');
+        
+        // Update UI for logged in state
+        const loginLink = document.querySelector('a[onclick*="loginModal"]');
+        loginLink.innerHTML = '<i class="fas fa-user"></i> Dashboard';
+        loginLink.onclick = () => showNotification('Dashboard coming soon!', 'info');
+      }, 2000);
+    }
+
+    function handleSignup(event) {
+      event.preventDefault();
+      const btn = event.target.querySelector('.form-btn');
+      const btnText = btn.querySelector('.btn-text');
+      const loading = btn.querySelector('.loading');
+      
+      btnText.style.display = 'none';
+      loading.style.display = 'inline-block';
+      
+      // Simulate signup process
+      setTimeout(() => {
+        btnText.style.display = 'inline';
+        loading.style.display = 'none';
+        closeModal('signupModal');
+        showNotification('Account created successfully! Welcome to NoteVerse.', 'success');
+      }, 2000);
+    }
+
+    // Enhanced branch card clicks with URL routing
+    document.addEventListener('DOMContentLoaded', () => {
+      const branchCards = document.querySelectorAll('.branch-card');
+      branchCards.forEach((card, index) => {
+        const branches = ['cse', 'ece', 'mechanical', 'civil', 'eee', 'it'];
+        const branchType = branches[index];
+        
+        card.onclick = () => {
+          router.navigateTo(`/notes/${branchType}`);
+        };
+      });
+    });
+
+    // Search functionality
+    function performSearch() {
+      const searchInput = document.querySelector('.search-input');
+      const query = searchInput.value.trim();
+      
+      if (query) {
+        showNotification(`Searching for "${query}"... Results coming soon!`, 'info');
+        // Here you would typically make an API call
+        // window.location.href = `/search?q=${encodeURIComponent(query)}`;
+      } else {
+        showNotification('Please enter a search term', 'error');
+      }
+    }
+
+    // Enhanced search with Enter key support
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.querySelector('.search-input');
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          performSearch();
+        }
+      });
+    });
+
+    // Download functionality
+    function downloadNotes(url) {
+      showNotification('Preparing download... This may take a moment.', 'info');
+      
+      // Simulate download preparation
+      setTimeout(() => {
+        showNotification('Download started! Check your downloads folder.', 'success');
+        // In a real implementation, you would trigger the actual download
+        // window.open(url, '_blank');
+      }, 2000);
+    }
+
+    // Notification system
+    function showNotification(message, type = 'info') {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 4000);
+    }
+
+    // Smooth scrolling for anchor links
+    document.addEventListener('DOMContentLoaded', () => {
+      const anchorLinks = document.querySelectorAll('a[href^="#"]');
+      anchorLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    });
+
+    // Back to top functionality
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    // Show/hide FAB based on scroll position
+    window.addEventListener('scroll', () => {
+      const fab = document.querySelector('.fab');
+      if (window.scrollY > 300) {
+        fab.style.opacity = '1';
+        fab.style.pointerEvents = 'auto';
+      } else {
+        fab.style.opacity = '0';
+        fab.style.pointerEvents = 'none';
+      }
+    });
+
+    // Enhanced external link handling
+    document.addEventListener('DOMContentLoaded', () => {
+      const externalLinks = document.querySelectorAll('a[href^="http"], a[href^="mailto:"]');
+      externalLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          if (link.href.startsWith('mailto:')) {
+            showNotification('Opening email client...', 'info');
+          } else {
+            showNotification('Opening external link...', 'info');
+          }
+        });
+      });
+    });
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(() => console.log('SW Registered'))
+          .catch(() => console.log('SW Registration Failed'));
+      });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const footerLinks = document.querySelectorAll('.footer-links a[href^="/"]');
+      footerLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          router.navigateTo(link.getAttribute('href'));
+        });
+      });
+    });
+
+    console.log('🎓 NoteVerse loaded successfully!');
+    console.log('📚 Ready to help B.Tech students excel!');
+  </script>
+</body>
+</html>
